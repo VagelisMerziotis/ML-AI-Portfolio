@@ -56,7 +56,7 @@ def process_clip(filename):
         """
         Optical flow is the displacement of pixel between successive images, namely in video files.
         When images move or the pictures are moving, optical flow increases. 
-        When the average is taken 
+        The average optical flow is kept and recorded.
         """
         # Calculate optical flow for between successive frames
         if prev_gray is not None:
@@ -71,7 +71,9 @@ def process_clip(filename):
         frame_count += 1
 
     video_cap.release()
-
+    """
+    Simply calculate the frames of the clip.
+    """
     if frame_count == 0:
         print(f"No frames processed for {filename}")
         return filename, {'clip': filename, 'person': 0, 'object': 0, 'speed': 0, 'frames': 0}
@@ -110,7 +112,7 @@ if __name__ == "__main__":
     # Collect results into a DataFrame
     data = pd.DataFrame([result[1] for result in results if result is not None])
 
-    # Save to Excel after processing all clips
+    # Save to Excel after processing all clips - safekeeping
     data.to_excel(output_csv, index=False)
     print(f"Saved results to {output_csv}")
 
@@ -129,14 +131,19 @@ if __name__ == "__main__":
 
     # Initialize a list to store results
     predictions = []
-
+    """
+    We load the models and use each one to make a prediction for each clip.
+    The mean value for the prediction of each clip is kept as the final result.
+    """
     # Iterate over each clip in the data
     for _, row in data.iterrows():
         clip_name = row['clip']
         clip_features = row[['person', 'object', 'speed', 'frames']].values.reshape(1, -1)  # Reshape for model input
 
         clip_predictions = []  # Store predictions (times) for this clip across all models
-
+    """
+    One model was problematic during development and that is when the the try-except was added for error control.
+    """
         for model_name, model in models_dict.items():
             try:
                 prediction = model.predict(clip_features)
