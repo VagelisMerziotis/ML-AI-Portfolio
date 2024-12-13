@@ -6,6 +6,9 @@ The models used for this case all all that could be make a good fit to the train
 
 The training data was extracted from hundreds of clips using the same function used to extract the features [person, object, speed, frames] from clips (process_clip).
 As the clip selection and replacement of batches was done by hand, duplicates occured, they were seperated and augmented by slightly changing their values (noise - augmentation).
+
+YOLO11 must be downloaded from the official ultralytics site 
+https://docs.ultralytics.com/models/yolo11/
 """
 
 
